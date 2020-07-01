@@ -1,5 +1,4 @@
 # Indihood
-
 A project to complete the [challenge](https://www.hackerearth.com/challenges/test/indihood-frontend-engineering-challenge-gaurav-gupta-072020/problems/5f559b7f1f11416d9a52874228248ed8/) by [Indihood](https://www.indihood.com)
 
 ## How to Run
