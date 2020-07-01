@@ -11,6 +11,10 @@ Change your current working directory to the project directory. That is the dire
 ```
 cd indihood
 ```
+#### Get flutter dependencies
+```
+flutter pub get
+```
 #### Run
 To run in debug mode run
 ```
