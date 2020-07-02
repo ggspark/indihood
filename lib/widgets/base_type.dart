@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:indihood/models/schema_data_model.dart';
 import 'package:indihood/widget_types.dart';
+import 'package:provider/provider.dart';
 
 ///Base class to be extended by all the classes looking to parse schema and data
 abstract class BaseType extends StatelessWidget {
@@ -20,32 +22,40 @@ abstract class BaseType extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (schema['num']) {
       case "0+":
-        return optionalRepeated(context, _widgetListRenderer(schema, data));
+        return optionalRepeated(
+            context, _widgetListRenderer(context, schema, data));
         break;
       case "1":
-        return requiredSingle(context, _widgetMapRenderer(schema, data));
+        return requiredSingle(
+            context, _widgetMapRenderer(context, schema, data));
         break;
       case "1+":
-        return requiredRepeated(context, _widgetListRenderer(schema, data));
+        return requiredRepeated(
+            context, _widgetListRenderer(context, schema, data));
         break;
       case "0-1":
-        return optionalSingle(context, _widgetMapRenderer(schema, data));
+        return optionalSingle(
+            context, _widgetMapRenderer(context, schema, data));
         break;
       default:
-        return requiredSingle(context, _widgetMapRenderer(schema, data));
+        return requiredSingle(
+            context, _widgetMapRenderer(context, schema, data));
     }
   }
 
   List<Map<String, Widget>> _widgetListRenderer(
-      Map<String, dynamic> schema, List data) {
+      BuildContext context, Map<String, dynamic> schema, List data) {
     return data.map((data) {
-      return _widgetMapRenderer(schema, data);
+      return _widgetMapRenderer(context, schema, data);
     }).toList();
   }
 
-  Map<String, Widget> _widgetMapRenderer(
+  Map<String, Widget> _widgetMapRenderer(BuildContext context,
       Map<String, dynamic> schema, dynamic data) {
-    Map<String, dynamic> currentSchema = fullSchema[schema["type"]];
+    Map<String, dynamic> currentSchema =
+    context
+        .watch<SchemaDataModel>()
+        .fullSchema[schema["type"]];
     return currentSchema?.map((key, value) {
       if (key == "type") {
         return MapEntry(key, Container());

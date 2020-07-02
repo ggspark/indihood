@@ -8,10 +8,6 @@ import 'package:indihood/widgets/composite/loan_terms_type.dart';
 import 'package:indihood/widgets/composite/loan_type.dart';
 import 'package:indihood/widgets/composite/repayment_type.dart';
 
-///A global variable to hold the full schema;
-///this can also be provided by an app wide provider
-Map<String, dynamic> fullSchema;
-
 ///Common function to get instances of widgets based on widget type
 ///specified by their schema
 Widget getWidgetType(String title, Map<String, dynamic> schema, dynamic data) {

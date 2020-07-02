@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:indihood/models/schema_data_model.dart';
 import 'package:indihood/services/api_service.dart';
 import 'package:indihood/widget_types.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,47 +34,38 @@ class MyApp extends StatelessWidget {
             ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: _MyHomePage(),
+      home: FutureProvider<SchemaDataModel>(
+        create: (_) => _fetchData(),
+        initialData: null,
+        child: _MyHome(),
+      ),
     );
   }
 }
 
 ///Widget that fetches the data from remote and renders the widgets according to schema
-class _MyHomePage extends StatefulWidget {
-  _MyHomePage({Key key}) : super(key: key);
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<_MyHomePage> {
-  Map<String, dynamic> loan;
-
-  @override
-  void initState() {
-    _fetchData();
-    super.initState();
-  }
-
-  void _fetchData() async {
-    fullSchema = await ApiService.get(
-        "https://ui-test-dot-indihood-dev-in.appspot.com/schema");
-    loan = await ApiService.get(
-        "https://ui-test-dot-indihood-dev-in.appspot.com/records");
-    setState(() {});
-  }
-
+class _MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (loan != null) {
-      return getWidgetType(
-        "loan1",
-        loan["loan1"],
-        loan["loan1"],
+    SchemaDataModel schemaDataModel = context.watch<SchemaDataModel>();
+    if (schemaDataModel == null) {
+      return Center(
+        child: CircularProgressIndicator(),
       );
     }
-    return Center(
-      child: CircularProgressIndicator(),
+    return getWidgetType(
+      "loan1",
+      schemaDataModel.fullData["loan1"],
+      schemaDataModel.fullData["loan1"],
     );
   }
+}
+
+///Fetch data from remote and populate model
+Future<SchemaDataModel> _fetchData() async {
+  var fullSchema = await ApiService.get(
+      "https://ui-test-dot-indihood-dev-in.appspot.com/schema");
+  var fullData = await ApiService.get(
+      "https://ui-test-dot-indihood-dev-in.appspot.com/records");
+  return SchemaDataModel(fullSchema: fullSchema, fullData: fullData);
 }
